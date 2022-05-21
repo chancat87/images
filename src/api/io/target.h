@@ -63,7 +63,17 @@ class FileTarget : public io::TargetInterface {
             std::fwrite(data, sizeof(char), length, file_));
     }
 
-    void finish() override {
+    // LCOV_EXCL_START
+    int64_t read(void * /* unsused */, size_t /* unsused */) override {
+        return -1;
+    }
+
+    off_t seek(off_t /* unsused */, int /* unsused */) override {
+        return -1;
+    }
+    // LCOV_EXCL_STOP
+
+    int end() override {
         std::fclose(file_);
     }
 
@@ -86,7 +96,17 @@ class MemoryTarget : public io::TargetInterface {
         return static_cast<int64_t>(length);
     }
 
-    void finish() override {}
+    // LCOV_EXCL_START
+    int64_t read(void * /* unsused */, size_t /* unsused */) override {
+        return -1;
+    }
+
+    off_t seek(off_t /* unsused */, int /* unsused */) override {
+        return -1;
+    }
+    // LCOV_EXCL_STOP
+
+    int end() override {}
 
  private:
     std::string *memory_;
@@ -129,7 +149,7 @@ class Target {
 
     int64_t write(const void *data, size_t length) const;
 
-    void finish() const;
+    int end() const;
 
 #ifndef WESERV_ENABLE_TRUE_STREAMING
  private:
