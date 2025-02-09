@@ -35,8 +35,7 @@ TEST_CASE("invalid image", "[invalid]") {
                     return 0;
                 }
 
-                buffer_.copy(reinterpret_cast<char *>(data), available,
-                             read_pos_);
+                buffer_.copy(static_cast<char *>(data), available, read_pos_);
                 read_pos_ += available;
                 return available;
             }
