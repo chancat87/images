@@ -312,7 +312,7 @@ VImage Mask::process(const VImage &image) const {
         auto blob =
             Blob(vips_blob_new(nullptr, svg_mask.data(), svg_mask.size()));
         auto mask = VImage::svgload_buffer(
-            blob.get_blob(),
+            blob.get(),
             VImage::option()->set("access", VIPS_ACCESS_SEQUENTIAL));
 
         // Cutout via dest-in
@@ -343,7 +343,7 @@ VImage Mask::process(const VImage &image) const {
         auto blob =
             Blob(vips_blob_new(nullptr, svg_frame.data(), svg_frame.size()));
         auto frame = VImage::svgload_buffer(
-            blob.get_blob(),
+            blob.get(),
             VImage::option()->set("access", VIPS_ACCESS_SEQUENTIAL));
 
         // Ensure image to composite is premultiplied sRGB

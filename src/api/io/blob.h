@@ -39,7 +39,7 @@ class Blob {
      * Get the underlying VipsBlob pointer.
      * @return The underlying VipsBlob pointer.
      */
-    VipsBlob *get_blob() const {
+    VipsBlob *get() const {
         return blob_;
     }
 
@@ -48,15 +48,32 @@ class Blob {
      * @param length Return number of bytes of data.
      * @return The data.
      */
-    const void *get_blob(size_t *length) const {
+    const void *get_data(size_t *length) const {
         return vips_blob_get(blob_, length);
     }
 
     /**
+     * Whether the pointer is non-null
+     * @return false if this Blob is a nullptr.
+     */
+    explicit operator bool() const {
+        return blob_ != nullptr;
+    }
+
+    /**
+     * Equality comparison to a null pointer
      * @return true if this Blob is a nullptr.
      */
-    bool is_null() const {
+    bool operator==(std::nullptr_t) const {
         return blob_ == nullptr;
+    }
+
+    /**
+     * Non-equality comparison to a null pointer
+     * @return false if this Blob is a nullptr.
+     */
+    bool operator!=(std::nullptr_t) const {
+        return blob_ != nullptr;
     }
 
  private:

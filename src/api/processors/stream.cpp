@@ -98,13 +98,14 @@ VImage Stream::new_from_source(const Source &source, const Blob &blob,
                                vips::VOption *options) {
     VImage out_image;
 
-    if (blob.is_null()) {
-        options->set("source", source)->set("out", &out_image);
-    } else {
+    if (blob != nullptr) {
         // We don't take a copy of the data or free it
-        options =
-            options->set("buffer", blob.get_blob())->set("out", &out_image);
+        options->set("buffer", blob.get());
+    } else {
+        options->set("source", source);
     }
+
+    options->set("out", &out_image);
 
     try {
         VImage::call(loader.c_str(), options);
@@ -209,12 +210,12 @@ VImage Stream::new_from_source(const Source &source) const {
     if (loader == nullptr) {
         // Try with the old buffer-based loaders
         blob = Blob(vips_source_map_blob(source.get_source()));
-        if (blob.is_null()) {
+        if (blob == nullptr) {
             throw exceptions::InvalidImageException(vips_error_buffer());
         }
 
         size_t len;
-        const void *buf = blob.get_blob(&len);
+        const void *buf = blob.get_data(&len);
 
         loader = vips_foreign_find_load_buffer(buf, len);
         if (loader == nullptr) {
