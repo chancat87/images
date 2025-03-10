@@ -78,7 +78,7 @@ jobs:
           cmake -S . -B build \
             -DCMAKE_BUILD_TYPE=Debug \
             -DCUSTOM_NGX_FLAGS="--prefix=$HOME/nginx" \
-            -DENABLE_COVERAGE=$([ "${{ matrix.coverage }}" = true ] && echo "ON" || echo "OFF") \
+            -DENABLE_COVERAGE=${{ matrix.coverage && 'ON' || 'OFF' }} \
             -DBUILD_TESTS=ON
           cmake --build build -- -j$(nproc)
 
