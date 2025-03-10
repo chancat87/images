@@ -15,7 +15,7 @@ using vips::VImage;
 TEST_CASE("output", "[stream]") {
     SECTION("jpeg") {
         auto test_image = fixtures->input_jpg;
-        auto params = "w=300&h=300&fit=cover&output=jpg";
+        auto params = "w=300&h=300&fit=cover&output=jpeg";
 
         VImage image = process_file<VImage>(test_image, params);
 
