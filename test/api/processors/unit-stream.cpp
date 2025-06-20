@@ -3,8 +3,6 @@
 
 #include "../base.h"
 
-#include <cstdio>
-#include <fstream>
 #include <vips/vips8>
 
 using Catch::Matchers::ContainsSubstring;
