@@ -38,8 +38,8 @@ RUN addgroup -g 101 -S nginx \
 --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp;\
 --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp;\
 --http-scgi-temp-path=/var/cache/nginx/scgi_temp;\
---pid-path=/var/run/nginx.pid;\
---lock-path=/var/run/nginx.lock;\
+--pid-path=/run/nginx.pid;\
+--lock-path=/run/nginx.lock;\
 --user=nginx;\
 --group=nginx" \
     && cmake --build _build -- -j$(nproc) \
