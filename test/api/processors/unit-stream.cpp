@@ -448,7 +448,7 @@ TEST_CASE("metadata", "[stream]") {
 
     SECTION("heic") {
         if (vips_type_find("VipsOperation", "heifload_buffer") == 0) {
-            SUCCEED("no heif support, skipping test");
+            SUCCEED("no heic support, skipping test");
             return;
         }
 
