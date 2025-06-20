@@ -49,7 +49,7 @@ TEST_CASE("rotation", "[rotation]") {
         }
 
         auto test_image = fixtures->input_tiff_5_channel;
-        auto params = "ro=30&rbg=red";
+        auto params = "ro=30&rbg=red&ll";
 
         VImage image = process_file<VImage>(test_image, params);
 
@@ -57,7 +57,7 @@ TEST_CASE("rotation", "[rotation]") {
 
         CHECK(image.width() == 137);
         CHECK(image.height() == 137);
-        CHECK(image.bands() == 3);
+        CHECK(image.bands() == 5);
     }
 
     SECTION("by 30 degrees, respecting output") {

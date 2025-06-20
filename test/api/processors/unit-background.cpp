@@ -128,13 +128,13 @@ TEST_CASE("5-channel tiff", "[background]") {
     }
 
     auto test_image = fixtures->input_tiff_5_channel;
-    auto params = "bg=white";
+    auto params = "bg=white&ll";
 
     VImage image = process_file<VImage>(test_image, params);
 
     CHECK_THAT(image.get_string("vips-loader"), Equals("tiffload_buffer"));
 
-    CHECK(image.bands() == 3);
+    CHECK(image.bands() == 5);
 }
 
 TEST_CASE("ignore", "[background]") {

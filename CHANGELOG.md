@@ -37,7 +37,7 @@ Requires libvips 8.12+.
 - The `weserv_deny_ip` nginx directive.
 - Support for `&default=1` ([#371](https://github.com/weserv/images/issues/371)).
 - Support for percentage-based values for some parameters ([#384](https://github.com/weserv/images/issues/384)).
-- Support for lossless encoding of WebP images (`&ll`) ([#386](https://github.com/weserv/images/issues/386)).
+- Support for lossless encoding of WebP and TIFF images (`&ll`) ([#386](https://github.com/weserv/images/issues/386)).
 
 ### Changed
 - Migrate Docker base image to Rocky Linux 9.

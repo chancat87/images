@@ -38,7 +38,7 @@ TEST_CASE("embed", "[embed]") {
         }
 
         auto test_image = fixtures->input_tiff_5_channel;
-        auto params = "w=50&h=40&fit=contain&cbg=white";
+        auto params = "w=50&h=40&fit=contain&cbg=white&ll";
 
         VImage image = process_file<VImage>(test_image, params);
 
@@ -46,7 +46,7 @@ TEST_CASE("embed", "[embed]") {
 
         CHECK(image.width() == 50);
         CHECK(image.height() == 40);
-        CHECK(!image.has_alpha());
+        CHECK(image.has_alpha());
     }
 
     // Letterbox TIFF in LAB colourspace onto RGBA background
