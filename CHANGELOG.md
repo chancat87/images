@@ -13,7 +13,7 @@ Requires libvips 8.12+.
 - Install target for the library and CLI tool.
 - Support for changing the nginx version during building.
 - Debug mode within the weserv module (`&debug=`). Requires nginx to be compiled with `--with-debug`.
-- `pagePrimary` to metadata output (`&output=json`).
+- `pagePrimary`, `isPalette` and `bitsPerSample` to metadata output (`&output=json`).
 - Support for brightness, saturation and hue modulation (`&mod=`) ([#226](https://github.com/weserv/images/pull/226)).
 - nginx directives for configuring API limits ([#227](https://github.com/weserv/images/issues/227)).
 - Support for nginx's `proxy_pass` directive ([#251](https://github.com/weserv/images/issues/251)).
@@ -27,7 +27,7 @@ Requires libvips 8.12+.
 - Alpine based Docker image ([#317](https://github.com/weserv/images/pull/317)).
 - A pkg-config file of the API library (`weserv.pc`).
 - Variants of nginx configurations (`imagesweserv-no-cache.conf` and `imagesweserv-secure-link.conf`).
-- Support for configuring the number of worker threads of libvips (via the `VIPS_CONCURRENCY` env).
+- Support for configuring the number of worker threads used by libvips (via the `VIPS_CONCURRENCY` env).
 - `/clear-cache` API endpoint ([#272](https://github.com/weserv/images/issues/272)).
 - `$weserv_response_length` embedded nginx variable.
 - Additional response headers ([#325](https://github.com/weserv/images/issues/325)).
@@ -55,6 +55,8 @@ Requires libvips 8.12+.
 - Use jemalloc in the glibc-based Dockerfile.
 - Improve ICC profile conversion.
 - Speed-up thumbnailing of RGBA images.
+- Improve error message for blocked domains/TLDs ([#432](https://github.com/weserv/images/issues/432)).
+- Improve luminance of `&tint=` operation with weighting function.
 
 ### Fixed
 - Compatibility with CMake < 3.12.
