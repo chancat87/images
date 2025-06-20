@@ -40,7 +40,7 @@ Requires libvips 8.12+.
 - Support for lossless encoding of WebP and TIFF images (`&ll`) ([#386](https://github.com/weserv/images/issues/386)).
 
 ### Changed
-- Migrate Docker base image to Rocky Linux 9.
+- Migrate Docker base image to Rocky Linux 10.
 - Attempt to decode corrupted or invalid images ([#194](https://github.com/weserv/images/issues/194)).
 - Docker image improvements ([#215](https://github.com/weserv/images/pull/215), [#216](https://github.com/weserv/images/pull/216), [#230](https://github.com/weserv/images/pull/230) and [#283](https://github.com/weserv/images/pull/283)).
 - Return an error when the maximum number of pages is exceeded ([#243](https://github.com/weserv/images/issues/243)).
