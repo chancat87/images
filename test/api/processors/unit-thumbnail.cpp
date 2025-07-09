@@ -1,12 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "../base.h"
 #include "../similar_image.h"
 
 #include <vips/vips8>
 
-using Catch::Matchers::ContainsSubstring;
 using vips::VImage;
 
 TEST_CASE("inside", "[thumbnail]") {
