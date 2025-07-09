@@ -160,7 +160,7 @@ ngx_int_t ngx_weserv_chunked_filter(ngx_event_pipe_t *p, ngx_buf_t *buf) {
         // was modified to enable passing upstream response trailers to the
         // client.
         ngx_int_t rc = ngx_http_parse_chunked(r, buf, &ctx->chunked
-#if defined(nginx_version) && nginx_version >= 1027002
+#if !defined(freenginx) && defined(nginx_version) && nginx_version >= 1027002
                                               , 0
 #endif
         );
