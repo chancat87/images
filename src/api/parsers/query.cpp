@@ -54,6 +54,7 @@ const TypeMap &type_map = {
     {"sharpf",  typeid(float)},
     {"sharpj",  typeid(float)},
     {"trim",    typeid(int)},
+    {"tbg",     typeid(Color)},
     {"blur",    typeid(float)},
     {"filt",    typeid(FilterType)},
     {"start",   typeid(Color)},
