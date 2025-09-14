@@ -10,9 +10,8 @@ VImage Trim::process(const VImage &image) const {
     auto threshold = query_->get_if<int>(
         "trim",
         [](int t) {
-            // Threshold needs to be in the
-            // range of 1 - 254
-            return t >= 1 && t <= 254;
+            // Threshold must be in [1, 254], or -1 to use the default
+            return t == -1 || (t >= 1 && t <= 254);
         },
         0);
 
@@ -22,6 +21,11 @@ VImage Trim::process(const VImage &image) const {
         query_->update("trim", false);
 
         return image;
+    }
+
+    // Use default threshold of 10 if none is given
+    if (threshold == -1) {
+        threshold = 10;
     }
 
     std::vector<double> trim_background;

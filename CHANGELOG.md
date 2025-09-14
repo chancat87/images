@@ -81,6 +81,7 @@ Requires libvips 8.12+.
 - The maximum values of the sharpen operation ([#357](https://github.com/weserv/images/issues/357)).
 - Bump buffer size for HTTP response headers ([#378](https://github.com/weserv/images/issues/378)).
 - Ensure correct dimensions for 90/270 rotate.
+- Ensure `&trim` is effective when used without a value.
 
 ### Deprecated
 | Before               | Use instead                             |

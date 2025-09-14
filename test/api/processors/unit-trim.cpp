@@ -57,7 +57,7 @@ TEST_CASE("trim", "[trim]") {
         auto test_image = fixtures->input_jpg_overlay_layer_2;
         auto expected_image =
             fixtures->expected_dir + "/alpha-layer-2-trim-resize.jpg";
-        auto params = "w=300&trim=10";
+        auto params = "w=300&trim";
 
         VImage image = process_file<VImage>(test_image, params);
 
