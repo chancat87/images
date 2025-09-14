@@ -1,5 +1,5 @@
 if (NOT NGX_VERSION)
-    set(NGX_VERSION 1.29.0)
+    set(NGX_VERSION 1.29.1)
 endif()
 
 set(NGX_ROOT ${CMAKE_CURRENT_BINARY_DIR})
@@ -30,8 +30,9 @@ else()
     set(MAKE_EXE "make")
 endif()
 
-# Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP on CMake 3.24.
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24.0)
+# Avoid warning about DOWNLOAD_EXTRACT_TIMESTAMP on CMake >= 3.24.
+# https://cmake.org/cmake/help/latest/policy/CMP0135.html
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
     cmake_policy(SET CMP0135 NEW)
 endif()
 
