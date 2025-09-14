@@ -60,7 +60,6 @@ Requires libvips 8.12+.
 - Improve luminance of `&tint=` operation with weighting function.
 
 ### Fixed
-- Compatibility with CMake < 3.12.
 - Compatibility with legacy websites by using the lowest OpenSSL security level ([#208](https://github.com/weserv/images/issues/208)).
 - Thread safety with copy-on-write for metadata ([lovell/sharp#1986](https://github.com/lovell/sharp/issues/1986)).
 - A small memory leak in thumbnail.
