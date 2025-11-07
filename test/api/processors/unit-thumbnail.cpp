@@ -249,12 +249,12 @@ TEST_CASE("tiff", "[thumbnail]") {
 
         auto test_image = fixtures->input_tiff_pyramid;
         auto expected_image = fixtures->expected_dir + "/tiff-pyramid.tiff";
-        auto params = "w=500&h=103";  // page=3
+        auto params = "w=320&h=320";  // page=3
 
         VImage image = process_file<VImage>(test_image, params);
 
-        CHECK(image.width() == 500);
-        CHECK(image.height() == 103);
+        CHECK(image.width() == 320);
+        CHECK(image.height() == 66);
 
         CHECK_THAT(image, is_similar_image(expected_image));
     }
