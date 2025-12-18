@@ -69,6 +69,7 @@ weserv_lib = library('weserv',
     dependencies: vips_dep,
     include_directories: weserv_includedir,
     version: library_version,
+    gnu_symbol_visibility: 'hidden',
     install: true,
 )
 
