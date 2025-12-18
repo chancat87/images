@@ -165,7 +165,7 @@ TEST_CASE("output", "[stream]") {
 
 TEST_CASE("special page", "[stream]") {
     SECTION("largest") {
-        if (vips_type_find("VipsOperation", "magickload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "magickload_source") == 0) {
             SUCCEED("no magick support, skipping test");
             return;
         }
@@ -514,7 +514,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("magick") {
-        if (vips_type_find("VipsOperation", "magickload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "magickload_source") == 0) {
             SUCCEED("no magick support, skipping test");
             return;
         }

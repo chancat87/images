@@ -20,21 +20,19 @@ using enums::Output;
 using parsers::Coordinate;
 using vips::VError;
 
-using io::Blob;
 using io::Source;
 using io::Target;
 
 template <typename Comparator>
 int Stream::resolve_page(const VImage &image, int n_pages, const Source &source,
-                         const Blob &blob, const std::string &loader,
-                         Comparator comp) const {
+                         const std::string &loader, Comparator comp) const {
     uint64_t size = static_cast<uint64_t>(image.height()) * image.width();
 
     int target_page = 0;
 
     for (int i = 1; i < n_pages; ++i) {
         auto image_page =
-            new_from_source(source, blob, loader,
+            new_from_source(source, loader,
                             VImage::option()
                                 ->set("access", VIPS_ACCESS_SEQUENTIAL)
                                 ->set("fail", config_.fail_on_error == 1)
@@ -70,7 +68,7 @@ std::pair<int, int> Stream::get_page_load_options(int n_pages) const {
         0);
 
     // Selecting the largest/smallest page implies n=1
-    if (page == -1 || page == -2) {
+    if (page < 0) {
         return std::pair{1, page};
     }
 
@@ -93,18 +91,11 @@ std::pair<int, int> Stream::get_page_load_options(int n_pages) const {
     return std::pair{n, page};
 }
 
-VImage Stream::new_from_source(const Source &source, const Blob &blob,
-                               const std::string &loader,
+VImage Stream::new_from_source(const Source &source, const std::string &loader,
                                vips::VOption *options) {
     VImage out_image;
 
-    if (blob != nullptr) {
-        // We don't take a copy of the data or free it
-        options->set("buffer", blob.get());
-    } else {
-        options->set("source", source);
-    }
-
+    options->set("source", source);
     options->set("out", &out_image);
 
     try {
@@ -204,23 +195,9 @@ void Stream::resolve_query(const VImage &image) const {
 }
 
 VImage Stream::new_from_source(const Source &source) const {
-    Blob blob;
-
     const char *loader = vips_foreign_find_load_source(source.get_source());
     if (loader == nullptr) {
-        // Try with the old buffer-based loaders
-        blob = Blob(vips_source_map_blob(source.get_source()));
-        if (blob == nullptr) {
-            throw exceptions::InvalidImageException(vips_error_buffer());
-        }
-
-        size_t len;
-        const void *buf = blob.get_data(&len);
-
-        loader = vips_foreign_find_load_buffer(buf, len);
-        if (loader == nullptr) {
-            throw exceptions::InvalidImageException(vips_error_buffer());
-        }
+        throw exceptions::InvalidImageException(vips_error_buffer());
     }
 
     ImageType image_type = utils::determine_image_type(loader);
@@ -235,7 +212,7 @@ VImage Stream::new_from_source(const Source &source) const {
                              ? VIPS_ACCESS_RANDOM
                              : VIPS_ACCESS_SEQUENTIAL;
 
-    auto image = new_from_source(source, blob, loader,
+    auto image = new_from_source(source, loader,
                                  VImage::option()
                                      ->set("access", access_method)
                                      ->set("fail", config_.fail_on_error == 1));
@@ -258,14 +235,13 @@ VImage Stream::new_from_source(const Source &source) const {
         }
 
         if (page == -1) {
-            page = resolve_page(image, n_pages, source, blob, loader,
-                                std::greater<>());
+            page =
+                resolve_page(image, n_pages, source, loader, std::greater<>());
         } else if (page == -2) {
-            page = resolve_page(image, n_pages, source, blob, loader,
-                                std::less<>());
+            page = resolve_page(image, n_pages, source, loader, std::less<>());
         }
 
-        image = new_from_source(source, blob, loader,
+        image = new_from_source(source, loader,
                                 VImage::option()
                                     ->set("access", access_method)
                                     ->set("fail", config_.fail_on_error == 1)

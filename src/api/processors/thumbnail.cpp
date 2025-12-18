@@ -1,7 +1,6 @@
 #include "thumbnail.h"
 
 #include "../exceptions/large.h"
-#include "../io/blob.h"
 #include "../utils/utility.h"
 
 #include <algorithm>
@@ -19,7 +18,6 @@ using enums::ImageType;
 // NOTE: Can be overridden with `&fsol=0`.
 constexpr bool FAST_SHRINK_ON_LOAD = true;
 
-using io::Blob;
 using io::Source;
 
 template <>

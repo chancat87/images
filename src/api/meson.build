@@ -33,7 +33,6 @@ weserv_headers = files(
     'exceptions/large.h',
     'exceptions/unreadable.h',
     'exceptions/unsupported.h',
-    'io/blob.h',
     'io/source.h',
     'io/target.h',
     'parsers/color.h',
