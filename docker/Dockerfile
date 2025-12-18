@@ -24,8 +24,7 @@ RUN dnf update -y \
         vips-heif \
         vips-poppler \
         vips-magick-im7 \
-        # FIXME(kleisauke): Re-enable in RL 10.1 - https://bugzilla.redhat.com/show_bug.cgi?id=2341746
-        #jemalloc-devel \
+        jemalloc-devel \
         openssl-devel \
         pcre2-devel \
         zlib-devel \
@@ -90,10 +89,8 @@ RUN dnf update -y \
 
 # Set default timezone (can be overridden with -e "TZ=Continent/City")
 ENV TZ=Europe/Amsterdam \
-    # Reduce the effects of memory fragmentation in long-running, multi-threaded processes
-    MALLOC_ARENA_MAX=2
-    # FIXME(kleisauke): Re-enable in RL 10.1 - https://bugzilla.redhat.com/show_bug.cgi?id=2341746
-    #LD_PRELOAD=/usr/lib64/libjemalloc.so
+    # Use jemalloc on glibc-based Linux systems to reduce the effects of memory fragmentation
+    LD_PRELOAD=/usr/lib64/libjemalloc.so
 
 EXPOSE 80
 
