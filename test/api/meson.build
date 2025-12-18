@@ -28,7 +28,6 @@ test_files = files(
     'processors/unit-alignment.cpp',
     'processors/unit-background.cpp',
     'processors/unit-blur.cpp',
-    'processors/unit-brightness.cpp',
     'processors/unit-contrast.cpp',
     'processors/unit-crop.cpp',
     'processors/unit-embed.cpp',
