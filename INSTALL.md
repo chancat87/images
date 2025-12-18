@@ -33,7 +33,7 @@ dnf config-manager --set-enabled remi
 dnf install vips vips-devel vips-tools
 
 # Install optional modules
-dnf install vips-heif vips-magick-im7 vips-poppler
+dnf install vips-heif vips-jxl vips-magick-im7 vips-poppler
 
 # Install build requirements
 dnf group install 'Development Tools'

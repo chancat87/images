@@ -67,6 +67,7 @@ RUN addgroup -g 101 -S nginx \
         openssl \
         pcre2 \
         vips-cpp \
+        vips-jxl \
         vips-heif \
         vips-magick \
         vips-poppler \

@@ -382,6 +382,27 @@ void Stream::append_save_options<Output::Avif>(vips::VOption *options) const {
 }
 
 template <>
+void Stream::append_save_options<Output::Jxl>(vips::VOption *options) const {
+    auto quality = query_->get_if<int>(
+        "q",
+        [](int q) {
+            // Quality needs to be in the range
+            // of 0 - 100
+            return q >= 0 && q <= 100;
+        },
+        static_cast<int>(config_.jxl_quality));
+
+    // Enable lossless compression, if necessary
+    options->set("lossless", query_->get<bool>("ll", false));
+
+    // Set quality (default is 80)
+    options->set("Q", quality);
+
+    // Control the CPU effort spent on improving compression (default 7)
+    options->set("effort", static_cast<int>(config_.jxl_effort));
+}
+
+template <>
 void Stream::append_save_options<Output::Tiff>(vips::VOption *options) const {
     auto quality = query_->get_if<int>(
         "q",
@@ -422,6 +443,9 @@ void Stream::append_save_options(const Output &output,
             break;
         case Output::Avif:
             append_save_options<Output::Avif>(options);
+            break;
+        case Output::Jxl:
+            append_save_options<Output::Jxl>(options);
             break;
         case Output::Tiff:
             append_save_options<Output::Tiff>(options);

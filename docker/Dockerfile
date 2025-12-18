@@ -20,6 +20,7 @@ RUN dnf update -y \
     && dnf install -y --setopt=tsflags=nodocs --setopt=install_weak_deps=False \
         meson \
         vips-devel \
+        vips-jxl \
         vips-heif \
         vips-poppler \
         vips-magick-im7 \

@@ -60,6 +60,24 @@ TEST_CASE("output", "[stream]") {
         CHECK(image.height() == 300);
     }
 
+    SECTION("jxl") {
+        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0 ||
+            vips_type_find("VipsOperation", "jxlsave_buffer") == 0) {
+            SUCCEED("no jxl support, skipping test");
+            return;
+        }
+
+        auto test_image = fixtures->input_jxl;
+        auto params = "w=300&h=300&fit=cover&output=jxl";
+
+        VImage image = process_file<VImage>(test_image, params);
+
+        CHECK_THAT(image.get_string("vips-loader"), Equals("jxlload_buffer"));
+
+        CHECK(image.width() == 300);
+        CHECK(image.height() == 300);
+    }
+
     SECTION("tiff") {
         if (vips_type_find("VipsOperation", "tiffload_buffer") == 0 ||
             vips_type_find("VipsOperation", "tiffsave_buffer") == 0) {
@@ -260,6 +278,26 @@ TEST_CASE("quality and compression", "[stream]") {
         CHECK(buffer_75.size() < buffer_95.size());
     }
 
+    SECTION("jxl quality") {
+        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0 ||
+            vips_type_find("VipsOperation", "jxlsave_buffer") == 0) {
+            SUCCEED("no jxl support, skipping test");
+            return;
+        }
+
+        auto test_image = fixtures->input_jxl;
+        auto params_75 = "w=320&h=240&fit=cover&q=75";
+        auto params_95 = "w=320&h=240&fit=cover&q=95";
+
+        std::string buffer_75 =
+            process_file<std::string>(test_image, params_75);
+
+        std::string buffer_95 =
+            process_file<std::string>(test_image, params_95);
+
+        CHECK(buffer_75.size() < buffer_95.size());
+    }
+
     SECTION("tiff quality") {
         if (vips_type_find("VipsOperation", "tiffload_buffer") == 0 ||
             vips_type_find("VipsOperation", "tiffsave_buffer") == 0) {
@@ -402,6 +440,20 @@ TEST_CASE("metadata", "[stream]") {
         std::string buffer = process_file<std::string>(test_image, params);
 
         CHECK_THAT(buffer, ContainsSubstring(R"("format":"heif")"));
+    }
+
+    SECTION("jxl") {
+        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0) {
+            SUCCEED("no jxl support, skipping test");
+            return;
+        }
+
+        auto test_image = fixtures->input_jxl;
+        auto params = "output=json";
+
+        std::string buffer = process_file<std::string>(test_image, params);
+
+        CHECK_THAT(buffer, ContainsSubstring(R"("format":"jxl")"));
     }
 
     SECTION("tiff") {
