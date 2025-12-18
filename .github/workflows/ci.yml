@@ -22,7 +22,7 @@ jobs:
         include:
           - name: "Linux x64 (Ubuntu 24.04)"
             os: ubuntu-24.04
-            libvips-version: 8.17.3
+            libvips-version: 8.18.0
             nginx-version: 1.29.4
             coverage: true
 
