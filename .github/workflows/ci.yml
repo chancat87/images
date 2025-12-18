@@ -12,6 +12,7 @@ permissions: {}
 
 jobs:
   CI:
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
@@ -19,8 +20,10 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - os: ubuntu-24.04
+          - name: "Linux x64 (Ubuntu 24.04)"
+            os: ubuntu-24.04
             libvips-version: 8.17.3
+            nginx-version: 1.29.3
             coverage: true
 
     steps:
@@ -75,17 +78,28 @@ jobs:
 
       - name: Build
         run: |
-          cmake -S . -B build \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCUSTOM_NGX_FLAGS="--prefix=$HOME/nginx" \
-            -DENABLE_COVERAGE=${{ matrix.coverage && 'ON' || 'OFF' }} \
-            -DBUILD_TESTS=ON
-          cmake --build build -- -j$(nproc)
+          meson setup build -Dbuildtype=debug -Dtests=true -Db_coverage=${{ matrix.coverage || 'false' }}
+          meson compile -C build
 
       - name: Run unit tests
+        run: meson test -C build
+
+      - name: Install
+        run: sudo meson install -C build
+
+      - name: Install nginx
         env:
-          VIPS_WARNING: 0
-        run: ctest --test-dir build -j $(nproc) --output-on-failure
+          NGINX_VERSION: ${{ matrix.nginx-version }}
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir nginx
+          curl -Ls https://nginx.org/download/nginx-$NGINX_VERSION.tar.gz | \
+            tar xzC nginx --strip-components=1
+          cd nginx
+          ./configure --prefix="$HOME/nginx" --add-module=${{ github.workspace }} --with-http_ssl_module
+          make -j$(nproc)
+          make install
+          sudo ldconfig
 
       - name: Run integration tests
         env:

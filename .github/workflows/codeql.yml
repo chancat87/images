@@ -38,15 +38,12 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends libvips-dev
+          sudo apt-get install --no-install-recommends meson libvips-dev
 
       - name: Build
         run: |
-          cmake -S . -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCUSTOM_NGX_FLAGS="--prefix=$HOME/nginx" \
-            -DBUILD_TESTS=OFF
-          cmake --build build -- -j$(nproc)
+          meson setup build
+          meson compile -C build
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
