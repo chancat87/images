@@ -761,8 +761,6 @@ ngx_int_t ngx_weserv_image_filter_read(ngx_http_request_t *r,
         b->pos += size;
 
         if (b->last_buf) {
-            ngx_free_chain(r->pool, cl);
-
             ctx->last = p;
             return NGX_OK;
         }
