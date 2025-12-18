@@ -24,8 +24,8 @@ TEST_CASE("output", "[stream]") {
     }
 
     SECTION("webp") {
-        if (vips_type_find("VipsOperation", "webpload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "webpsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "webpload_source") == 0 ||
+            vips_type_find("VipsOperation", "webpsave_target") == 0) {
             SUCCEED("no webp support, skipping test");
             return;
         }
@@ -42,8 +42,8 @@ TEST_CASE("output", "[stream]") {
     }
 
     SECTION("avif") {
-        if (vips_type_find("VipsOperation", "heifload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "heifsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "heifload_source") == 0 ||
+            vips_type_find("VipsOperation", "heifsave_target") == 0) {
             SUCCEED("no avif support, skipping test");
             return;
         }
@@ -61,8 +61,8 @@ TEST_CASE("output", "[stream]") {
     }
 
     SECTION("jxl") {
-        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "jxlsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "jxlload_source") == 0 ||
+            vips_type_find("VipsOperation", "jxlsave_target") == 0) {
             SUCCEED("no jxl support, skipping test");
             return;
         }
@@ -79,8 +79,8 @@ TEST_CASE("output", "[stream]") {
     }
 
     SECTION("tiff") {
-        if (vips_type_find("VipsOperation", "tiffload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "tiffsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "tiffload_source") == 0 ||
+            vips_type_find("VipsOperation", "tiffsave_target") == 0) {
             SUCCEED("no tiff support, skipping test");
             return;
         }
@@ -97,8 +97,8 @@ TEST_CASE("output", "[stream]") {
     }
 
     SECTION("gif") {
-        if (vips_type_find("VipsOperation", "gifload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "gifsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "gifload_source") == 0 ||
+            vips_type_find("VipsOperation", "gifsave_target") == 0) {
             SUCCEED("no gif support, skipping test");
             return;
         }
@@ -182,8 +182,8 @@ TEST_CASE("special page", "[stream]") {
     }
 
     SECTION("smallest") {
-        if (vips_type_find("VipsOperation", "tiffload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "tiffsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "tiffload_source") == 0 ||
+            vips_type_find("VipsOperation", "tiffsave_target") == 0) {
             SUCCEED("no tiff support, skipping test");
             return;
         }
@@ -234,8 +234,8 @@ TEST_CASE("quality and compression", "[stream]") {
     }
 
     SECTION("webp quality") {
-        if (vips_type_find("VipsOperation", "webpload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "webpsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "webpload_source") == 0 ||
+            vips_type_find("VipsOperation", "webpsave_target") == 0) {
             SUCCEED("no webp support, skipping test");
             return;
         }
@@ -259,8 +259,8 @@ TEST_CASE("quality and compression", "[stream]") {
     }
 
     SECTION("avif quality") {
-        if (vips_type_find("VipsOperation", "heifload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "heifsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "heifload_source") == 0 ||
+            vips_type_find("VipsOperation", "heifsave_target") == 0) {
             SUCCEED("no avif support, skipping test");
             return;
         }
@@ -279,8 +279,8 @@ TEST_CASE("quality and compression", "[stream]") {
     }
 
     SECTION("jxl quality") {
-        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "jxlsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "jxlload_source") == 0 ||
+            vips_type_find("VipsOperation", "jxlsave_target") == 0) {
             SUCCEED("no jxl support, skipping test");
             return;
         }
@@ -299,8 +299,8 @@ TEST_CASE("quality and compression", "[stream]") {
     }
 
     SECTION("tiff quality") {
-        if (vips_type_find("VipsOperation", "tiffload_buffer") == 0 ||
-            vips_type_find("VipsOperation", "tiffsave_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "tiffload_source") == 0 ||
+            vips_type_find("VipsOperation", "tiffsave_target") == 0) {
             SUCCEED("no tiff support, skipping test");
             return;
         }
@@ -339,7 +339,7 @@ TEST_CASE("without adaptive filtering generates smaller file", "[stream]") {
 
 TEST_CASE("gif options", "[stream]") {
     SECTION("loop count") {
-        if (vips_type_find("VipsOperation", "gifload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "gifload_source") == 0) {
             SUCCEED("no gif support, skipping test");
             return;
         }
@@ -356,7 +356,7 @@ TEST_CASE("gif options", "[stream]") {
     }
 
     SECTION("frame delay") {
-        if (vips_type_find("VipsOperation", "gifload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "gifload_source") == 0) {
             SUCCEED("no gif support, skipping test");
             return;
         }
@@ -373,7 +373,7 @@ TEST_CASE("gif options", "[stream]") {
     }
 
     SECTION("page height") {
-        if (vips_type_find("VipsOperation", "gifload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "gifload_source") == 0) {
             SUCCEED("no gif support, skipping test");
             return;
         }
@@ -415,7 +415,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("webp") {
-        if (vips_type_find("VipsOperation", "webpload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "webpload_source") == 0) {
             SUCCEED("no webp support, skipping test");
             return;
         }
@@ -429,7 +429,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("avif") {
-        if (vips_type_find("VipsOperation", "heifload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "heifload_source") == 0) {
             SUCCEED("no avif support, skipping test");
             return;
         }
@@ -443,7 +443,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("jxl") {
-        if (vips_type_find("VipsOperation", "jxlload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "jxlload_source") == 0) {
             SUCCEED("no jxl support, skipping test");
             return;
         }
@@ -457,7 +457,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("tiff") {
-        if (vips_type_find("VipsOperation", "tiffload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "tiffload_source") == 0) {
             SUCCEED("no tiff support, skipping test");
             return;
         }
@@ -471,7 +471,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("svg") {
-        if (vips_type_find("VipsOperation", "svgload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "svgload_source") == 0) {
             SUCCEED("no svg support, skipping test");
             return;
         }
@@ -485,7 +485,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("pdf") {
-        if (vips_type_find("VipsOperation", "pdfload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "pdfload_source") == 0) {
             SUCCEED("no pdf support, skipping test");
             return;
         }
@@ -499,7 +499,7 @@ TEST_CASE("metadata", "[stream]") {
     }
 
     SECTION("heic") {
-        if (vips_type_find("VipsOperation", "heifload_buffer") == 0) {
+        if (vips_type_find("VipsOperation", "heifload_source") == 0) {
             SUCCEED("no heic support, skipping test");
             return;
         }
