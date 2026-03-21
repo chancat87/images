@@ -9,6 +9,7 @@ Requires libvips 8.12+.
 
 ### Added
 - Support for true streaming ([#225](https://github.com/weserv/images/pull/225)).
+- Support for JPEG XL images.
 - Support for upstream TLSv1.3 connections.
 - Install target for the library and CLI tool.
 - Support for changing the nginx version during building.
@@ -42,6 +43,7 @@ Requires libvips 8.12+.
 
 ### Changed
 - Migrate Docker base image to Rocky Linux 10.
+- Migrate to Meson build system.
 - Attempt to decode corrupted or invalid images ([#194](https://github.com/weserv/images/issues/194)).
 - Docker image improvements ([#215](https://github.com/weserv/images/pull/215), [#216](https://github.com/weserv/images/pull/216), [#230](https://github.com/weserv/images/pull/230) and [#283](https://github.com/weserv/images/pull/283)).
 - Return an error when the maximum number of pages is exceeded ([#243](https://github.com/weserv/images/issues/243)).
@@ -50,7 +52,7 @@ Requires libvips 8.12+.
 - Increase rate limit quota to 2500 requests per 10 minutes ([#196](https://github.com/weserv/images/issues/196)).
 - The name of the project, CLI and shared library name (`imagesweserv` -> `weserv`).
 - Warn if nginx was configured without `--with-http_ssl_module`.
-- Build nginx with `--with-http_secure_link_module` by default.
+- Build nginx with `--with-http_secure_link_module` by default in Docker.
 - Migrate from PCRE to PCRE2.
 - Modernize code to C++17.
 - Use jemalloc in the glibc-based Dockerfile.
@@ -227,7 +229,7 @@ With the magical help of [libvips](https://github.com/libvips/libvips) and the P
 This version was never used in production; it was only used for testing purposes and marked the start of rewriting the image proxy (which has been in production since 2007).
 
 ### Added
-- Add CHANGELOG.md based on [’Keep a CHANGELOG’](https://github.com/olivierlacan/keep-a-changelog).
+- Add CHANGELOG.md based on [‘Keep a CHANGELOG’](https://github.com/olivierlacan/keep-a-changelog).
 - Composer ready and [PSR-2](https://www.php-fig.org/psr/psr-2/) compliant.
 - Use the [Intervention Image](https://image.intervention.io/) library for image handling and manipulation.
 - Use the [Guzzle](https://github.com/guzzle/guzzle) library for sending HTTP requests.
