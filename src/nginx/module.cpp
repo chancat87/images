@@ -175,6 +175,14 @@ ngx_command_t ngx_weserv_commands[] = {
      offsetof(ngx_weserv_loc_conf_t, canonical_header),
      nullptr},
 
+    {ngx_string("weserv_error_redirect"),
+     NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF |
+         NGX_HTTP_LIF_CONF | NGX_CONF_FLAG,
+     ngx_conf_set_flag_slot,
+     NGX_HTTP_LOC_CONF_OFFSET,
+     offsetof(ngx_weserv_loc_conf_t, error_redirect),
+     nullptr},
+
     {ngx_string("weserv_savers"),
      NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF |
          NGX_CONF_1MORE,
@@ -539,6 +547,7 @@ void *ngx_weserv_create_loc_conf(ngx_conf_t *cf) {
     lc->max_size = NGX_CONF_UNSET_SIZE;
     lc->max_redirects = NGX_CONF_UNSET_UINT;
     lc->canonical_header = NGX_CONF_UNSET;
+    lc->error_redirect = NGX_CONF_UNSET;
 
     // API configuration
     lc->api_conf.savers = 0;
@@ -596,6 +605,9 @@ char *ngx_weserv_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child) {
 
     // Set the rel="canonical" response header by default on proxied images
     ngx_conf_merge_value(conf->canonical_header, prev->canonical_header, 1);
+
+    // Handling of `&default=` query parameter is enabled by default
+    ngx_conf_merge_value(conf->error_redirect, prev->error_redirect, 1);
 
     // All supported savers are enabled by default
     ngx_conf_merge_bitmask_value(
@@ -876,7 +888,8 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
 #endif
         ) {
             ngx_chain_t *out = ngx_weserv_error_chain(
-                r, upstream_ctx, upstream_ctx->response_status);
+                r, upstream_ctx, upstream_ctx->response_status,
+                lc->error_redirect);
             if (out == NGX_CHAIN_ERROR) {
                 return NGX_ERROR;
             }
@@ -897,7 +910,8 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
                              std::to_string(lc->max_size) + " bytes",
                          Status::ErrorCause::Application};
 
-        ngx_chain_t *out = ngx_weserv_error_chain(r, upstream_ctx, status);
+        ngx_chain_t *out =
+            ngx_weserv_error_chain(r, upstream_ctx, status, lc->error_redirect);
         if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
@@ -927,7 +941,8 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_pfree(r->pool, ctx->image);
 
     if (!status.ok()) {
-        out = ngx_weserv_error_chain(r, upstream_ctx, status);
+        out =
+            ngx_weserv_error_chain(r, upstream_ctx, status, lc->error_redirect);
         if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }

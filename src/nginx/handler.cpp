@@ -38,7 +38,8 @@ ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
         Status status = {Status::Code::InvalidUri, "Unable to parse URI",
                          Status::ErrorCause::Application};
 
-        ngx_chain_t *out = ngx_weserv_error_chain(r, nullptr, status);
+        ngx_chain_t *out =
+            ngx_weserv_error_chain(r, nullptr, status, lc->error_redirect);
         if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }
@@ -80,7 +81,8 @@ ngx_int_t ngx_weserv_request_handler(ngx_http_request_t *r) {
     rc = ngx_weserv_send_http_request(r, ctx);
 
     if (rc == NGX_ERROR) {
-        ngx_chain_t *out = ngx_weserv_error_chain(r, ctx, ctx->response_status);
+        ngx_chain_t *out = ngx_weserv_error_chain(r, ctx, ctx->response_status,
+                                                  lc->error_redirect);
         if (out == NGX_CHAIN_ERROR) {
             return NGX_ERROR;
         }

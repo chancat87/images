@@ -34,7 +34,7 @@ Requires libvips 8.12+.
 - Support multi-frame images for various operations (embed, crop, mask and orient).
 - The `weserv_canonical_header` nginx directive ([#309](https://github.com/weserv/images/issues/309)).
 - Client-side DNS failover mechanism ([#331](https://github.com/weserv/images/issues/331)).
-- The `weserv_deny_ip` nginx directive.
+- The `weserv_deny_ip` and `weserv_error_redirect` nginx directives.
 - Support for `&default=1` ([#371](https://github.com/weserv/images/issues/371)).
 - Support for percentage-based values for some parameters ([#384](https://github.com/weserv/images/issues/384)).
 - Support for lossless encoding of WebP and TIFF images (`&ll`) ([#386](https://github.com/weserv/images/issues/386)).

@@ -9,18 +9,20 @@ using weserv::api::utils::Status;
 
 namespace weserv::nginx {
 
-ngx_chain_t *ngx_weserv_error_chain(ngx_http_request_t *r,
-                                    ngx_weserv_upstream_ctx_t *upstream_ctx,
-                                    const Status &status) {
+ngx_chain_t *
+ngx_weserv_error_chain(ngx_http_request_t *r,
+                       const ngx_weserv_upstream_ctx_t *upstream_ctx,
+                       const Status &status, bool redirect_enabled) {
     ngx_uint_t http_status = status.http_code();
 
     // Redirect if the 'default' (or 'errorredirect') query parameter is given.
     // Note that the 'errorredirect' parameter was deprecated since API 5
     // and is only used here for backward compatible reasons.
     ngx_str_t redirect_uri;
-    if (ngx_http_arg(r, (u_char *)"default", 7, &redirect_uri) == NGX_OK ||
-        ngx_http_arg(r, (u_char *)"errorredirect", 13, &redirect_uri) ==
-            NGX_OK) {
+    if (redirect_enabled &&
+        (ngx_http_arg(r, (u_char *)"default", 7, &redirect_uri) == NGX_OK ||
+         ngx_http_arg(r, (u_char *)"errorredirect", 13, &redirect_uri) ==
+             NGX_OK)) {
         ngx_str_t parsed_redirect = ngx_null_string;
         if (redirect_uri.len != 1 || redirect_uri.data[0] != '1') {
             (void)parse_url(r->pool, redirect_uri, &parsed_redirect);

@@ -96,6 +96,16 @@ Sets the maximum number of redirection-followings allowed.
 Determines whether the `rel="canonical"` response header should be set to
 proxied images (i.e., when configured with the `proxy` backend mode).
 
+### `weserv_error_redirect`
+
+| syntax:      | <code>weserv_error_redirect on&#124;off</code> |
+| :----------- | :----------------------------------------------|
+| **default:** | `on`                                           |
+| **context:** | `http`, `server`, `location`, `if in location` |
+
+Enables or disables handling of the `&default=` query parameter, allowing
+errors to be redirected to a fallback image or returned as an error response.
+
 ### `weserv_savers`
 
 | syntax:      | `weserv_savers [jpg] [png] [webp] [avif] [tiff] [gif] [json] [jxl]` |
