@@ -154,20 +154,18 @@ inline std::string determine_image_extension(const Output &output) {
  */
 inline std::string supported_savers_string(const uintptr_t msk) {
     std::string result;
+    bool first = true;
 
-    for (int i = 1; i <= 7; ++i) {
-        uintptr_t output = 1U << i;
-        if ((msk & output) != 0) {
-            std::string saver =
-                determine_image_extension(static_cast<Output>(output))
-                    .substr(1);
+    for (uintptr_t bits = msk; bits != 0; bits &= (bits - 1)) {
+        uintptr_t bit = bits & -bits;  // isolate LSB
 
-            if (result.empty()) {
-                result = saver;
-            } else {
-                result += ", " + saver;
-            }
+        std::string ext = determine_image_extension(static_cast<Output>(bit));
+
+        if (!first) {
+            result += ", ";
         }
+        result.append(ext.begin() + 1, ext.end());
+        first = false;
     }
 
     return result;
