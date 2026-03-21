@@ -66,7 +66,7 @@ const TypeMap &type_map = {
     {"l",       typeid(int)},
     {"output",  typeid(Output)},
     {"il",      typeid(bool)},
-    {"ll",      typeid(bool)},              // TODO(kleisauke): Documentation needed.
+    {"ll",      typeid(bool)},
     {"af",      typeid(bool)},
     {"page",    typeid(int)},
     {"n",       typeid(int)},
