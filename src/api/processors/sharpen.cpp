@@ -29,7 +29,8 @@ VImage Sharpen::process(const VImage &image) const {
                                            -1.0, -1.0, -1.0);
         // clang-format on
         sharpen.set("scale", 24.0);
-        return image.conv(sharpen);
+        return image.conv(sharpen, VImage::option()->set(
+                                       "precision", VIPS_PRECISION_INTEGER));
     }
 
     // Slope for flat areas

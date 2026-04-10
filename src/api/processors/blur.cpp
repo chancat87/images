@@ -28,7 +28,8 @@ VImage Blur::process(const VImage &image) const {
                                         1.0, 1.0, 1.0);
         // clang-format on
         blur.set("scale", 9.0);
-        return image.conv(blur);
+        return image.conv(
+            blur, VImage::option()->set("precision", VIPS_PRECISION_INTEGER));
     }
 
     // Slower, accurate Gaussian blur
