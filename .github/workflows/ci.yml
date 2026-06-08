@@ -23,7 +23,7 @@ jobs:
           - name: "Linux x64 (Ubuntu 24.04)"
             os: ubuntu-24.04
             libvips-version: 8.18.2
-            nginx-version: 1.29.8
+            nginx-version: 1.31.1
             coverage: true
 
     steps:
