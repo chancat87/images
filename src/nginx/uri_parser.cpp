@@ -20,27 +20,6 @@ constexpr uint32_t INITIAL_BIAS = 72;
 constexpr uint32_t INITIAL_N = 128;
 
 /**
- * Array of skip-bytes-per-initial character.
- */
-static const u_char UTF8_SKIP[256] = {
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-    4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 1, 1};
-
-/**
- * Skips to the next character in a UTF-8 string.
- */
-#define utf8_next_char(p) ((p) + UTF8_SKIP[*(p)])
-
-/**
  * RFC 3490, section 3.1 says '.', 0x3002, 0xFF0E, and 0xFF61 count as
  * label-separating dots. @str must be '\0'-terminated.
  */
@@ -55,6 +34,12 @@ static const u_char UTF8_SKIP[256] = {
      (static_cast<u_char>((str)[0]) == 0xEF &&                                 \
       static_cast<u_char>((str)[1]) == 0xBD &&                                 \
       static_cast<u_char>((str)[2]) == 0xA1))
+
+/**
+ * Companion macro to obtain length of recognized IDNA dot sequence.
+ */
+#define idna_dot_len(str) \
+    ((static_cast<u_char>((str)[0]) == '.') ? 1 : 3)
 
 /**
  * encode_digit(d) returns the basic code point whose value
@@ -215,7 +200,7 @@ ngx_int_t punycode_encode(u_char *input, size_t input_length,
  * and reserved characters according to RFC 3986 section 2.2 (January 2005).
  * See: https://github.com/weserv/images/issues/144
  */
-uintptr_t escape_path(u_char *dst, u_char *src, size_t size) {
+u_char *escape_path(u_char *dst, u_char *src, size_t size) {
     static u_char hex[] = "0123456789ABCDEF";
 
     // Per RFC 3986 only the following chars are allowed in URIs unescaped:
@@ -261,7 +246,7 @@ uintptr_t escape_path(u_char *dst, u_char *src, size_t size) {
             size--;
         }
 
-        return n;
+        return reinterpret_cast<u_char *>(n);
     }
 
     while (size) {
@@ -277,7 +262,7 @@ uintptr_t escape_path(u_char *dst, u_char *src, size_t size) {
         size--;
     }
 
-    return reinterpret_cast<uintptr_t>(dst);
+    return dst;
 }
 
 ngx_int_t concat_url(ngx_pool_t *pool, const ngx_str_t &base,
@@ -461,34 +446,41 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
         protocol = ngx_string("http://");
     }
 
-    // uri.find_first_not_of("/");
+    // Skip redundant leading slashes in host segment
     while (ref < last && *ref == '/') {
         ++ref;
     }
 
-    // uri.find_first_of("/?")
-    u_char *path = ngx_strlchr(ref, last, '/');
-    if (path == nullptr) {
-        path = ngx_strlchr(ref, last, '?');
-    }
-
-    if (path == nullptr) {
-        path = last;
-    }
-
-    // Remove the fragment part of the path. Per RFC 3986, this is always the
-    // last part of the URI. We are looking for the first '#' so that we deal
-    // gracefully with non-conformant URI such as http://example.com#foo#bar
-    u_char *fragment = ngx_strlchr(path, last, '#');
-    if (fragment != nullptr) {
-        last = fragment;
+    // Isolate path, query, or fragment boundary
+    u_char *path = last;
+    for (u_char *p = ref; p < last; p++) {
+        // Per RFC 3986, fragments begin at the first '#' and extend to the end
+        // of the URI. Truncating here handles non-conformant URIs gracefully.
+        if (*p == '#') {
+            last = p;
+            if (path > p) {
+                path = p;
+            }
+            break;
+        }
+        // Record only the first path ('/') or query ('?') delimiter found
+        if (path == last && (*p == '/' || *p == '?')) {
+            path = p;
+        }
     }
 
     size_t path_length = static_cast<size_t>(last - path);
 
     // Note: each escaped character is replaced by 3 characters
-    uintptr_t escaped_length =
-        path_length > 0 ? 2 * escape_path(nullptr, path, path_length) : 1;
+    uintptr_t escape_count = path_length > 0
+                                 ? reinterpret_cast<uintptr_t>(
+                                       escape_path(nullptr, path, path_length))
+                                 : 0;
+    size_t escaped_length = path_length + (2 * escape_count);
+    if (path_length == 0) {
+        // Space for the leading slash
+        escaped_length = 1;
+    }
 
     size_t domain_length = static_cast<size_t>(path - ref);
 
@@ -499,7 +491,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
     }
 
     output->data = static_cast<u_char *>(
-        ngx_pnalloc(pool, protocol.len + 253 + path_length + escaped_length));
+        ngx_pnalloc(pool, protocol.len + 253 + escaped_length));
     if (output->data == nullptr) {
         return NGX_ERROR;
     }
@@ -510,7 +502,7 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
     u_char *label = ref;
     u_char *p;
 
-    do {
+    while (label < path) {
         bool unicode = false;
 
         for (p = label; p < path && !idna_is_dot(p); ++p) {
@@ -549,25 +541,25 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
         }
 
         label += llen;
-        if (label < path) {
-            label = utf8_next_char(label);
-        }
 
-        // Append dot between labels
+        // If we haven't reached the path boundary, we are guaranteed to be
+        // sitting on a dot delimiter. Skip it and normalize the output.
         if (label < path) {
+            label += idna_dot_len(label);
             *o++ = '.';
             output->len++;
         }
-    } while (label < path);
+    }
 
     if (path_length > 0) {
-        (void)escape_path(o, path, path_length);
+        o = escape_path(o, path, path_length);
+        // Update length by adding the total bytes written by escape_path
+        output->len += o - (output->data + output->len);
     } else {
         // Add a leading slash to form a valid path
         *o++ = '/';
+        output->len++;
     }
-
-    output->len += path_length + escaped_length;
 
     return NGX_OK;
 }
