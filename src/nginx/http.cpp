@@ -365,8 +365,11 @@ ngx_int_t ngx_weserv_upstream_process_status_line(ngx_http_request_t *r) {
     }
 
     if (rc == NGX_ERROR) {
-        r->upstream->headers_in.connection_close = 1;
-        return NGX_OK;
+        ctx->response_status = {NGX_HTTP_VERSION_NOT_SUPPORTED,
+                                "Upstream sent no valid HTTP/1.0 header",
+                                Status::ErrorCause::Upstream};
+
+        return NGX_HTTP_UPSTREAM_INVALID_HEADER;
     }
 
     // We assume that status codes between 300-308 are redirects

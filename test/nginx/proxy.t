@@ -145,7 +145,34 @@ Content-Type: application/json
 [warn]
 
 
-=== TEST 5: chunked transfer encoding
+=== TEST 5: reject HTTP/0.9 response
+--- http_config eval: $::HttpConfig
+--- config
+    location /svg {
+        proxy_buffering off;
+        proxy_pass http://unix:reject_test.sock;
+    }
+
+    location /images {
+        weserv proxy;
+    }
+--- request eval
+"GET /images?url=$ENV{TEST_NGINX_URI}/svg"
+--- tcp_listen: reject_test.sock
+--- tcp_no_close
+--- tcp_reply eval
+"$ENV{TEST_NGINX_SVG}"
+--- response_headers
+Content-Type: application/json
+--- response_body_like: ^.*"code":404,"message":"The requested URL returned error: 505".*$
+--- error_code: 404
+--- error_log
+upstream sent no valid HTTP/1.0 header
+--- no_error_log
+[warn]
+
+
+=== TEST 6: chunked transfer encoding
 --- http_config eval: $::HttpConfig
 --- config
     location /chunked {
@@ -178,7 +205,7 @@ Content-Type: application/json
 [warn]
 
 
-=== TEST 6: gzip-compressed SVG
+=== TEST 7: gzip-compressed SVG
 --- http_config eval: $::HttpConfig
 --- config
     location /gzip {
