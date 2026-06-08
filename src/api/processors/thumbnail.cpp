@@ -174,8 +174,9 @@ int Thumbnail::resolve_tiff_pyramid(const VImage &image, const Source &source,
                       ? image.get_int(VIPS_META_N_PAGES)
                       : 1;
 
-    // Only one page? Can't be
-    if (n_pages < 2) {
+    // Single-page docs can't be pyramids, more than 30 levels will int
+    // overflow.
+    if (n_pages < 2 || n_pages > 30) {
         return -1;
     }
 
