@@ -506,6 +506,11 @@ ngx_int_t parse_url(ngx_pool_t *pool, ngx_str_t &uri, ngx_str_t *output) {
         bool unicode = false;
 
         for (p = label; p < path && !idna_is_dot(p); ++p) {
+            // Reject CRLF, control characters, spaces and backslashes in the
+            // hostname
+            if (*p <= 0x20 || *p == 0x7F || *p == '\\') {
+                return NGX_ERROR;
+            }
             if (*p > 0x80) {
                 unicode = true;
             }

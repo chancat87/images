@@ -506,7 +506,10 @@ ngx_int_t ngx_weserv_upstream_process_header(ngx_http_request_t *r) {
                 }
 
                 // Parse the absolute redirection URI
-                (void)parse_url(r->pool, absolute_url, &ctx->location);
+                ngx_str_t parsed_uri;
+                if (parse_url(r->pool, absolute_url, &parsed_uri) == NGX_OK) {
+                    ctx->location = parsed_uri;
+                }
             }
 
             continue;

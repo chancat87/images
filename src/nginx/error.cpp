@@ -25,7 +25,10 @@ ngx_weserv_error_chain(ngx_http_request_t *r,
              NGX_OK)) {
         ngx_str_t parsed_redirect = ngx_null_string;
         if (redirect_uri.len != 1 || redirect_uri.data[0] != '1') {
-            (void)parse_url(r->pool, redirect_uri, &parsed_redirect);
+            ngx_str_t parsed_uri;
+            if (parse_url(r->pool, redirect_uri, &parsed_uri) == NGX_OK) {
+                parsed_redirect = parsed_uri;
+            }
         } else if (upstream_ctx != nullptr &&
                    upstream_ctx->request != nullptr) {
             // NB: ->request will be nullptr in case of redirect errors.
