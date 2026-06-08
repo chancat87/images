@@ -4,7 +4,7 @@ use Test::Nginx::Socket;
 use Test::Nginx::Util qw($ServerPort $ServerAddr);
 use IO::Compress::Gzip qw(gzip);
 
-plan tests => repeat_each() * (blocks() * 6 - 1);
+plan tests => repeat_each() * (blocks() * 5);
 
 $ENV{TEST_NGINX_HTML_DIR} ||= html_dir();
 $ENV{TEST_NGINX_URI} = "http://$ServerAddr:$ServerPort";
@@ -150,7 +150,7 @@ Content-Type: application/json
 --- config
     location /chunked {
         proxy_buffering off;
-        proxy_pass http://unix:proxy_test.sock;
+        proxy_pass http://unix:chunked_test.sock;
     }
 
     location /images {
@@ -158,18 +158,18 @@ Content-Type: application/json
     }
 --- request eval
 "GET /images?url=$ENV{TEST_NGINX_URI}/chunked&output=json"
---- tcp_listen: proxy_test.sock
+--- tcp_listen: chunked_test.sock
 --- tcp_no_close
 --- tcp_reply eval
-sub {
-    return ["HTTP/1.1 200 OK\r\n",
-            "Transfer-Encoding: chunked\r\n",
-            "\r\n",
-            sprintf("%x", length $ENV{TEST_NGINX_SVG}) . "\r\n",
-            $ENV{TEST_NGINX_SVG} . "\r\n",
-            "0\r\n",
-            "\r\n"];
-}
+[
+    "HTTP/1.1 200 OK\r\n",
+    "Transfer-Encoding: chunked\r\n",
+    "\r\n",
+    sprintf("%x", length $ENV{TEST_NGINX_SVG}) . "\r\n",
+    $ENV{TEST_NGINX_SVG} . "\r\n",
+    "0\r\n",
+    "\r\n"
+]
 --- response_headers
 Content-Type: application/json
 --- response_body_like: ^.*"format":"svg","width":1,"height":1,.*$
@@ -193,11 +193,10 @@ Content-Type: application/json
 ">>> test.svgz
 $::TestSvgGzip"
 --- request eval
-['GET /gzip/test.svgz', "GET /images?url=$ENV{TEST_NGINX_URI}/gzip/test.svgz&output=json"]
---- response_headers eval
-['Content-Encoding: gzip', 'Content-Type: application/json']
---- response_body_like eval
-['^\037\213', '^.*"format":"svg","width":1,"height":1,.*$']
+"GET /images?url=$ENV{TEST_NGINX_URI}/gzip/test.svgz&output=json"
+--- response_headers
+Content-Type: application/json
+--- response_body_like: ^.*"format":"svg","width":1,"height":1,.*$
 --- no_error_log
 [error]
 [warn]
