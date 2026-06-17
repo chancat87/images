@@ -1,7 +1,7 @@
 # Based on:
 # https://github.com/nginx/pkg-oss/blob/master/alpine/Makefile
 # https://github.com/nginxinc/docker-nginx/blob/master/mainline/alpine/Dockerfile
-FROM alpine:3.23
+FROM alpine:3.24
 
 LABEL maintainer="Kleis Auke Wolthuizen <info@kleisauke.nl>"
 
@@ -64,6 +64,7 @@ RUN addgroup -g 101 -S nginx \
     && apk del --no-network .build-deps \
     # Bring in runtime dependencies
     && apk add --no-cache \
+        libheif-svtenc \
         openssl \
         pcre2 \
         vips-cpp \
