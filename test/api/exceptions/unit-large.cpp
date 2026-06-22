@@ -38,6 +38,29 @@ TEST_CASE("too large image", "[large]") {
     }
 }
 
+TEST_CASE("too many channels", "[large]") {
+    SECTION("input") {
+        if (vips_type_find("VipsOperation", "tiffload_source") == 0) {
+            SUCCEED("no tiff support, skipping test");
+            return;
+        }
+
+        auto test_image = fixtures->input_tiff_5_channel;
+        auto config = Config();
+        config.limit_input_channels = 4;
+
+        std::string out_buf;
+        Status status = process_file(test_image, &out_buf, "", config);
+
+        CHECK(!status.ok());
+        CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
+        CHECK(status.error_cause() == Status::ErrorCause::Application);
+        CHECK_THAT(status.message(),
+                   ContainsSubstring("Input image exceeds channel limit."));
+        CHECK(out_buf.empty());
+    }
+}
+
 TEST_CASE("too many pages", "[large]") {
     SECTION("input") {
         if (vips_type_find("VipsOperation", "gifload_source") == 0) {

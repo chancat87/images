@@ -13,10 +13,11 @@ struct Config {
     explicit Config()
         : savers(static_cast<uintptr_t>(enums::Output::All)),
           process_timeout(10), limit_input_pixels(71000000),
-          limit_output_pixels(71000000), max_pages(256), quality(80),
-          avif_quality(80), jpeg_quality(80), jxl_quality(80), tiff_quality(80),
-          webp_quality(80), avif_effort(4), jxl_effort(7), gif_effort(7),
-          webp_effort(4), zlib_level(6), fail_on_error(0) {}
+          limit_output_pixels(71000000), limit_input_channels(5),
+          max_pages(256), quality(80), avif_quality(80), jpeg_quality(80),
+          jxl_quality(80), tiff_quality(80), webp_quality(80), avif_effort(4),
+          jxl_effort(7), gif_effort(7), webp_effort(4), zlib_level(6),
+          fail_on_error(0) {}
 
     /**
      * Enables or disables image savers to be used within the `&output=` query
@@ -48,6 +49,14 @@ struct Config {
      * weserv_limit_output_pixels 71000000;
      */
     uintptr_t limit_output_pixels;
+
+    /**
+     * Do not process input images where the number of channels exceeds this
+     * limit. Assumes image metadata can be trusted.
+     * Defaults to `5`, set to `0` to remove the limit.
+     * weserv_limit_input_channels 5;
+     */
+    intptr_t limit_input_channels;
 
     /**
      * The maximum number of pages to extract for multi-page input (GIF, TIFF,

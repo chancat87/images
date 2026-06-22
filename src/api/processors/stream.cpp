@@ -260,6 +260,15 @@ VImage Stream::new_from_source(const Source &source) const {
             std::to_string(config_.limit_input_pixels));
     }
 
+    // Limit input images to a given number of channels
+    if (config_.limit_input_channels > 0 &&
+        image.bands() > config_.limit_input_channels) {
+        throw exceptions::TooLargeImageException(
+            "Input image exceeds channel limit. "
+            "Number of channels should be less than " +
+            std::to_string(config_.limit_input_channels));
+    }
+
     // Always store the page load options
     query_->update("n", n);
     query_->update("page", page);

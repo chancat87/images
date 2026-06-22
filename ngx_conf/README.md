@@ -143,7 +143,7 @@ PDF, WebP). Set to `0` to remove this limit.
 | **default:** | `71000000`                                     |
 | **context:** | `http`, `server`, `location`, `if in location` |
 
-Sets the maximum number of pixels (width × height) of an input image to be
+Sets the maximum number of pixels (width x height) of an input image to be
 processed. Assumes image dimensions contained in the input metadata can be
 trusted. Set to `0` to remove this limit.
 
@@ -154,8 +154,18 @@ trusted. Set to `0` to remove this limit.
 | **default:** | `71000000`                                     |
 | **context:** | `http`, `server`, `location`, `if in location` |
 
-Sets the maximum number of pixels (width × height) of an output image, after
+Sets the maximum number of pixels (width x height) of an output image, after
 any upscaling. Set to `0` to remove this limit.
+
+### `weserv_limit_input_channels`
+
+| syntax:      | `weserv_limit_input_channels <channels>`       |
+| :----------- | :--------------------------------------------- |
+| **default:** | `5`                                            |
+| **context:** | `http`, `server`, `location`, `if in location` |
+
+Sets the maximum number of channels of an input image to be processed.
+Assumes image metadata can be trusted. Set to `0` to remove this limit.
 
 ### `weserv_quality`
 
