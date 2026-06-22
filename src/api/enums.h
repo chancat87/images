@@ -6,8 +6,8 @@ namespace weserv::api::enums {
 
 enum class Position {
     Center = VIPS_INTERESTING_CENTRE,  // Default
-    Entropy = VIPS_INTERESTING_ENTROPY,
-    Attention = VIPS_INTERESTING_ATTENTION,
+    Entropy,
+    Attention,
     Top,
     Right,
     Bottom,
