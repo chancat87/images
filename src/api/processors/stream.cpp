@@ -77,7 +77,7 @@ std::pair<int, int> Stream::get_page_load_options(int n_pages) const {
         [&n_pages](int n) {
             // Limit number of pages to [1, n_pages]
             // or -1 for all pages (animated GIF/WebP)
-            // Note: This is checked against config_.max_pages below.
+            // Note: This is checked against config_.limit_input_pages below.
             return n == -1 || (n >= 1 && n <= n_pages);
         },
         1);
@@ -226,12 +226,12 @@ VImage Stream::new_from_source(const Source &source) const {
     std::tie(n, page) = get_page_load_options(n_pages);
 
     if (n != 1 || page != 0) {
-        // Limit the number of pages
-        if (config_.max_pages > 0 && n > config_.max_pages) {
+        // Limit input images to a given number of pages
+        if (config_.limit_input_pages > 0 && n > config_.limit_input_pages) {
             throw exceptions::TooLargeImageException(
-                "Input image exceeds the maximum number of pages. "
+                "Input image exceeds page limit. "
                 "Number of pages should be less than " +
-                std::to_string(config_.max_pages));
+                std::to_string(config_.limit_input_pages));
         }
 
         if (page == -1) {

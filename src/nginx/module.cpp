@@ -199,14 +199,6 @@ ngx_command_t ngx_weserv_commands[] = {
      offsetof(ngx_weserv_loc_conf_t, api_conf.process_timeout),
      nullptr},
 
-    {ngx_string("weserv_max_pages"),
-     NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF |
-         NGX_HTTP_LIF_CONF | NGX_CONF_TAKE1,
-     ngx_conf_set_num_slot,
-     NGX_HTTP_LOC_CONF_OFFSET,
-     offsetof(ngx_weserv_loc_conf_t, api_conf.max_pages),
-     nullptr},
-
     {ngx_string("weserv_limit_input_pixels"),
      NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF |
          NGX_HTTP_LIF_CONF | NGX_CONF_TAKE1,
@@ -229,6 +221,14 @@ ngx_command_t ngx_weserv_commands[] = {
      ngx_conf_set_num_slot,
      NGX_HTTP_LOC_CONF_OFFSET,
      offsetof(ngx_weserv_loc_conf_t, api_conf.limit_input_channels),
+     nullptr},
+
+    {ngx_string("weserv_limit_input_pages"),
+     NGX_HTTP_MAIN_CONF | NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF |
+         NGX_HTTP_LIF_CONF | NGX_CONF_TAKE1,
+     ngx_conf_set_num_slot,
+     NGX_HTTP_LOC_CONF_OFFSET,
+     offsetof(ngx_weserv_loc_conf_t, api_conf.limit_input_pages),
      nullptr},
 
     {ngx_string("weserv_quality"),
@@ -563,7 +563,7 @@ void *ngx_weserv_create_loc_conf(ngx_conf_t *cf) {
     lc->api_conf.limit_input_pixels = NGX_CONF_UNSET_UINT;
     lc->api_conf.limit_output_pixels = NGX_CONF_UNSET_UINT;
     lc->api_conf.limit_input_channels = NGX_CONF_UNSET;
-    lc->api_conf.max_pages = NGX_CONF_UNSET;
+    lc->api_conf.limit_input_pages = NGX_CONF_UNSET;
     lc->api_conf.quality = NGX_CONF_UNSET;
     lc->api_conf.avif_quality = NGX_CONF_UNSET;
     lc->api_conf.jpeg_quality = NGX_CONF_UNSET;
@@ -627,10 +627,6 @@ char *ngx_weserv_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child) {
     ngx_conf_merge_value(conf->api_conf.process_timeout,
                          prev->api_conf.process_timeout, 10);
 
-    // Process at the maximum 256 pages, which should be plenty
-    ngx_conf_merge_value(conf->api_conf.max_pages, prev->api_conf.max_pages,
-                         256);
-
     // Do not process images where the number of pixels exceeds 71000000
     ngx_conf_merge_uint_value(conf->api_conf.limit_input_pixels,
                               prev->api_conf.limit_input_pixels, 71000000);
@@ -642,6 +638,10 @@ char *ngx_weserv_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child) {
     // Do not process images where the number of channels exceeds 5
     ngx_conf_merge_value(conf->api_conf.limit_input_channels,
                          prev->api_conf.limit_input_channels, 5);
+
+    // Do not process images where the number of pages exceeds 256
+    ngx_conf_merge_value(conf->api_conf.limit_input_pages,
+                         prev->api_conf.limit_input_pages, 256);
 
     // The default quality of 80 usually produces excellent results
     ngx_conf_merge_value(conf->api_conf.quality, prev->api_conf.quality, 80);

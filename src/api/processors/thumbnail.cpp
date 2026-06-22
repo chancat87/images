@@ -161,7 +161,7 @@ int Thumbnail::resolve_jpeg_shrink(int width, int height) const {
 
 int Thumbnail::resolve_tiff_pyramid(const VImage &image, const Source &source,
                                     int width, int height) const {
-    // Note: This is checked against config_.max_pages in stream.cpp
+    // Note: This is checked against config_.limit_input_pages in stream.cpp
     int n_pages = image.get_typeof(VIPS_META_N_PAGES) != 0
                       ? image.get_int(VIPS_META_N_PAGES)
                       : 1;

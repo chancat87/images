@@ -68,7 +68,7 @@ TEST_CASE("too many pages", "[large]") {
             return;
         }
 
-        auto test_image = fixtures->input_gif_animated_max_pages;
+        auto test_image = fixtures->input_gif_1024_pages;
         auto params = "n=-1";
 
         std::string out_buf;
@@ -78,8 +78,7 @@ TEST_CASE("too many pages", "[large]") {
         CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
         CHECK(status.error_cause() == Status::ErrorCause::Application);
         CHECK_THAT(status.message(),
-                   ContainsSubstring(
-                       "Input image exceeds the maximum number of pages."));
+                   ContainsSubstring("Input image exceeds page limit."));
         CHECK(out_buf.empty());
     }
 }

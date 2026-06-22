@@ -126,16 +126,6 @@ This directive accepts multiple parameters.
 Specifies a maximum allowed time for image processing. Set to `0` to remove
 this limit.
 
-### `weserv_max_pages`
-
-| syntax:      | `weserv_max_pages <pages>`                     |
-| :----------- | :--------------------------------------------- |
-| **default:** | `256`                                          |
-| **context:** | `http`, `server`, `location`, `if in location` |
-
-Sets the maximum number of pages to extract for multi-page input (GIF, TIFF,
-PDF, WebP). Set to `0` to remove this limit.
-
 ### `weserv_limit_input_pixels`
 
 | syntax:      | `weserv_limit_input_pixels <pixels>`           |
@@ -165,6 +155,16 @@ any upscaling. Set to `0` to remove this limit.
 | **context:** | `http`, `server`, `location`, `if in location` |
 
 Sets the maximum number of channels of an input image to be processed.
+Assumes image metadata can be trusted. Set to `0` to remove this limit.
+
+### `weserv_limit_input_pages`
+
+| syntax:      | `weserv_limit_input_pages <pages>`             |
+| :----------- | :--------------------------------------------- |
+| **default:** | `256`                                          |
+| **context:** | `http`, `server`, `location`, `if in location` |
+
+Sets the maximum number of pages of an input image to be processed.
 Assumes image metadata can be trusted. Set to `0` to remove this limit.
 
 ### `weserv_quality`

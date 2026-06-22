@@ -127,7 +127,7 @@ struct Fixtures {
 
     // vips black x.v 1 1024
     // vips copy x.v 1024-pages.gif[page-height=1,strip]
-    std::string input_gif_animated_max_pages{dir + "/1024-pages.gif"};
+    std::string input_gif_1024_pages{dir + "/1024-pages.gif"};
 
     // https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/check.svg
     std::string input_svg{dir + "/check.svg"};
