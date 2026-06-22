@@ -142,7 +142,7 @@ std::string Mask::svg_path_by_type(const int width, const int height,
     // If an odd number of points, add a point at the top of the polygon; this
     // will shift the calculated center point of the shape so that the center
     // point of the polygon is at x,y (otherwise the center is mis-located)
-    if (points % 2 == 1) {
+    if (points % 2 != 0) {
         path = "M0 " + std::to_string(outer_radius) + " " + path;
     }
 
