@@ -24,13 +24,11 @@ VImage Filter::process(const VImage &image) const {
             return image.colourspace(VIPS_INTERPRETATION_B_W);
         case FilterType::Sepia: {
             // Perform sepia filter manipulation
-            // clang-format off
-            std::array<double, 9> sepia = {
-                0.3588, 0.7044, 0.1368,
-                0.2990, 0.5870, 0.1140,
-                0.2392, 0.4696, 0.0912
-            };
+            std::array<double, 9> sepia = {0.3588, 0.7044, 0.1368,
+                                           0.2990, 0.5870, 0.1140,
+                                           0.2392, 0.4696, 0.0912};
 
+            // clang-format off
             auto matrix =
                 image.bands() == 3
                     ? VImage::new_from_memory(sepia.begin(), 9 * sizeof(double),
@@ -40,11 +38,9 @@ VImage Filter::process(const VImage &image) const {
                                           sepia[3], sepia[4], sepia[5], 0.0,
                                           sepia[6], sepia[7], sepia[8], 0.0,
                                           0.0, 0.0, 0.0, 1.0);
-
-            return image
-                .colourspace(VIPS_INTERPRETATION_sRGB)
-                .recomb(matrix);
             // clang-format on
+
+            return image.colourspace(VIPS_INTERPRETATION_sRGB).recomb(matrix);
         }
         case FilterType::Duotone: {
             // #C83658 by default

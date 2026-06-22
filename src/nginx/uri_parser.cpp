@@ -38,8 +38,7 @@ constexpr uint32_t INITIAL_N = 128;
 /**
  * Companion macro to obtain length of recognized IDNA dot sequence.
  */
-#define idna_dot_len(str) \
-    ((static_cast<u_char>((str)[0]) == '.') ? 1 : 3)
+#define idna_dot_len(str) ((static_cast<u_char>((str)[0]) == '.') ? 1 : 3)
 
 /**
  * encode_digit(d) returns the basic code point whose value
