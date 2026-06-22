@@ -48,14 +48,6 @@ Thumbnail::new_from_source<ImageType::Tiff>(const Source &source,
     return VImage::tiffload_source(source, options);
 }
 
-// TODO(kleisauke): Support whole-slide images(?)
-/*template <>
-VImage
-Thumbnail::new_from_source<ImageType::OpenSlide>(const Source &source,
-                                                 vips::VOption *options) const {
-    return VImage::openslideload_source(source, options);
-}*/
-
 template <>
 VImage
 Thumbnail::new_from_source<ImageType::Svg>(const Source &source,
@@ -217,39 +209,6 @@ int Thumbnail::resolve_tiff_pyramid(const VImage &image, const Source &source,
     return target_page;
 }
 
-// TODO(kleisauke): Support whole-slide images(?)
-/*int Thumbnail::resolve_open_slide_level(const VImage &image) const {
-    int level_count = 1;
-    if (image.get_typeof("openslide.level-count") != 0) {
-        level_count =
-            std::max(1, std::min(image.get_int("openslide.level-count"),
-                                 static_cast<int>(config_.max_pages)));
-    }
-
-    for (int level = level_count - 1; level >= 0; level--) {
-        auto level_str = "openslide.level[" + std::to_string(level) + "]";
-        auto level_width_field = level_str + ".width";
-        auto level_height_field = level_str + ".height";
-
-        if (image.get_typeof(level_width_field.c_str()) == 0 ||
-            image.get_typeof(level_height_field.c_str()) == 0) {
-            continue;
-        }
-
-        auto level_width =
-            std::stoi(image.get_string(level_width_field.c_str()));
-        auto level_height =
-            std::stoi(image.get_string(level_height_field.c_str()));
-
-        // Not >=, shrink can clip to 1.0
-        if (resolve_common_shrink(level_width, level_height) > 1.0) {
-            return level;
-        }
-    }
-
-    return 0;
-}*/
-
 void Thumbnail::append_page_options(vips::VOption *options) const {
     auto n = query_->get<int>("n");
     auto page = query_->get<int>("page");
@@ -311,11 +270,6 @@ VImage Thumbnail::shrink_on_load(const VImage &image,
             return new_from_source<ImageType::Tiff>(
                 source, load_options->set("page", page));
         }
-    /*} else if (image_type == ImageType::OpenSlide) {
-        auto level = resolve_open_slide_level(image);
-
-        return new_from_source<ImageType::OpenSlide>(
-            source, load_options->set("level", level));*/
     } else if (image_type == ImageType::Svg) {
         auto scale = 1.0 / resolve_common_shrink(width, height);
 

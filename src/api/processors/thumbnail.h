@@ -71,13 +71,6 @@ class Thumbnail : ImageProcessor {
                              int width, int height) const;
 
     /**
-     * Find the best openslide level.
-     * @param image The source image.
-     * @return The pyramid level.
-     */
-    /*int resolve_open_slide_level(const VImage &image) const;*/
-
-    /**
      * Append which page and the amount of pages we need to render for loaders
      * that support this.
      * @param options The source options.
