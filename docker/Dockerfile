@@ -87,6 +87,19 @@ RUN dnf update -y \
     # Copy nginx configuration to the appropriate location
     && cp ngx_conf/*.conf /etc/nginx
 
+COPY <<EOF /etc/ImageMagick-7/policy.xml
+<policymap>
+  <!--
+  Use IM only to read certain image types. Assumes the rest is handled in libvips.
+  Note: ICO data can be either a BMP image, or a complete PNG image.
+  -->
+  <policy domain="delegate" rights="none" pattern="*" />
+  <policy domain="filter" rights="none" pattern="*" />
+  <policy domain="coder" rights="none" pattern="*" />
+  <policy domain="coder" rights="read" pattern="{ICO,BMP,PNG}" />
+</policymap>
+EOF
+
 # Set default timezone (can be overridden with -e "TZ=Continent/City")
 ENV TZ=Europe/Amsterdam \
     # Use jemalloc on glibc-based Linux systems to reduce the effects of memory fragmentation
