@@ -19,7 +19,7 @@ TEST_CASE("too large image", "[large]") {
         CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
         CHECK(status.error_cause() == Status::ErrorCause::Application);
         CHECK_THAT(status.message(),
-                   ContainsSubstring("Input image exceeds pixel limit."));
+                   ContainsSubstring("Input image exceeds pixel limit"));
     }
 
     SECTION("output") {
@@ -33,7 +33,7 @@ TEST_CASE("too large image", "[large]") {
         CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
         CHECK(status.error_cause() == Status::ErrorCause::Application);
         CHECK_THAT(status.message(),
-                   ContainsSubstring("Output image exceeds pixel limit."));
+                   ContainsSubstring("Output image exceeds pixel limit"));
         CHECK(out_buf.empty());
     }
 }
@@ -56,7 +56,7 @@ TEST_CASE("too many channels", "[large]") {
         CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
         CHECK(status.error_cause() == Status::ErrorCause::Application);
         CHECK_THAT(status.message(),
-                   ContainsSubstring("Input image exceeds channel limit."));
+                   ContainsSubstring("Input image exceeds 4-channel limit"));
         CHECK(out_buf.empty());
     }
 }
@@ -78,7 +78,7 @@ TEST_CASE("too many pages", "[large]") {
         CHECK(status.code() == static_cast<int>(Status::Code::ImageTooLarge));
         CHECK(status.error_cause() == Status::ErrorCause::Application);
         CHECK_THAT(status.message(),
-                   ContainsSubstring("Input image exceeds page limit."));
+                   ContainsSubstring("Input image exceeds 256-page limit"));
         CHECK(out_buf.empty());
     }
 }

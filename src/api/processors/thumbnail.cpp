@@ -342,9 +342,8 @@ VImage Thumbnail::process(const VImage &image) const {
         static_cast<uint64_t>(target_width) * target_image_height >
             config_.limit_output_pixels) {
         throw exceptions::TooLargeImageException(
-            "Output image exceeds pixel limit. "
-            "Width x height should be less than " +
-            std::to_string(config_.limit_output_pixels));
+            "Output image exceeds pixel limit (" +
+            std::to_string(config_.limit_output_pixels) + " pixels)");
     }
 
     // Both .premultiply() and .unpremultiply() produces a float image, so we

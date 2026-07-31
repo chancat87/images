@@ -229,9 +229,8 @@ VImage Stream::new_from_source(const Source &source) const {
         // Limit input images to a given number of pages
         if (config_.limit_input_pages > 0 && n > config_.limit_input_pages) {
             throw exceptions::TooLargeImageException(
-                "Input image exceeds page limit. "
-                "Number of pages should be less than " +
-                std::to_string(config_.limit_input_pages));
+                "Input image exceeds " +
+                std::to_string(config_.limit_input_pages) + "-page limit");
         }
 
         if (page == -1) {
@@ -255,18 +254,16 @@ VImage Stream::new_from_source(const Source &source) const {
         static_cast<uint64_t>(image.width()) * image.height() >
             config_.limit_input_pixels) {
         throw exceptions::TooLargeImageException(
-            "Input image exceeds pixel limit. "
-            "Width x height should be less than " +
-            std::to_string(config_.limit_input_pixels));
+            "Input image exceeds pixel limit (" +
+            std::to_string(config_.limit_input_pixels) + " pixels)");
     }
 
     // Limit input images to a given number of channels
     if (config_.limit_input_channels > 0 &&
         image.bands() > config_.limit_input_channels) {
         throw exceptions::TooLargeImageException(
-            "Input image exceeds channel limit. "
-            "Number of channels should be less than " +
-            std::to_string(config_.limit_input_channels));
+            "Input image exceeds " +
+            std::to_string(config_.limit_input_channels) + "-channel limit");
     }
 
     // Always store the page load options
