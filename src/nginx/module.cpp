@@ -787,6 +787,7 @@ ngx_int_t ngx_weserv_image_filter_read(ngx_http_request_t *r,
 
         if (b->last_buf) {
             ctx->last = p;
+            ctx->length = p - ctx->image;
             return NGX_OK;
         }
     }
@@ -827,16 +828,14 @@ ngx_int_t ngx_weserv_finish_debug_chain(ngx_http_request_t *r,
 
 ngx_int_t ngx_weserv_finish_debug_output(ngx_http_request_t *r,
                                          ngx_weserv_base_ctx_t *ctx) {
-    size_t size = ctx->last - ctx->image;
-
-    ngx_buf_t *buf = ngx_create_temp_buf(r->pool, size);
+    ngx_buf_t *buf = ngx_create_temp_buf(r->pool, ctx->length);
     if (buf == nullptr) {
         return NGX_ERROR;
     }
 
     buf->last_buf = 1;
     buf->last_in_chain = 1;
-    buf->last = ngx_cpymem(buf->last, ctx->image, size);
+    buf->last = ngx_cpymem(buf->last, ctx->image, ctx->length);
 
     ngx_chain_t *out = ngx_alloc_chain_link(r->pool);
     if (out == nullptr) {
@@ -946,7 +945,7 @@ ngx_int_t ngx_weserv_image_body_filter(ngx_http_request_t *r, ngx_chain_t *in) {
     ngx_chain_t *out = nullptr;
     Status status = mc->weserv->process(
         ngx_str_to_std(r->args),
-        std::make_unique<NgxSource>(ctx->image, ctx->last - ctx->image),
+        std::make_unique<NgxSource>(ctx->image, ctx->length),
         std::make_unique<NgxTarget>(r, upstream_ctx, &out), lc->api_conf);
 
     // Memory is released immediately after the image output is complete,
