@@ -15,7 +15,7 @@ RUN dnf update -y \
     && crb enable \
     && dnf install -y https://rpms.remirepo.net/enterprise/remi-release-10.rpm \
     && dnf config-manager --set-enabled remi \
-    && dnf install -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-10.noarch.rpm \
+    && dnf config-manager --add-repo https://rpms.wsrv.nl/weserv.repo \
     && dnf group install -y 'Development Tools' \
     && dnf install -y --setopt=tsflags=nodocs --setopt=install_weak_deps=False \
         meson \
