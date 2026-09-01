@@ -45,9 +45,7 @@ inline bool is_16_bit(const VipsInterpretation interpretation) {
  * @return A bool indicating whether the image is palette-based.
  */
 inline bool is_palette(const VImage &image) {
-    return image.get_typeof(VIPS_META_PALETTE) != 0
-               ? static_cast<bool>(image.get_int(VIPS_META_PALETTE))
-               : false;
+    return image.get_typeof(VIPS_META_PALETTE) != 0;
 }
 #endif
 
