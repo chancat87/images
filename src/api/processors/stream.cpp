@@ -30,7 +30,8 @@ int Stream::resolve_page(const VImage &image, int n_pages, const Source &source,
 
     int target_page = 0;
 
-    for (int i = 1; i < n_pages; ++i) {
+    // Inspect at most 30 pages in total
+    for (int i = 1; i < std::min(n_pages, 30); ++i) {
         auto image_page =
             new_from_source(source, loader,
                             VImage::option()

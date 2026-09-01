@@ -34,6 +34,7 @@ class Stream {
     /**
      * Finds the largest/smallest page in the range [0, n_pages].
      * Pages are compared using the given comparison function.
+     * Assumes the target page is among the first 30 pages.
      * See: https://github.com/weserv/images/issues/170.
      * @tparam Comparator Comparison type.
      * @param image The source image.
