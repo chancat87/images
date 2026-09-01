@@ -1,5 +1,5 @@
 project('weserv', 'cpp',
-    version: '5.0.0',
+    version: '5.1.0',
     meson_version: '>=0.63',
     license: 'BSD-3-Clause',
     default_options: [

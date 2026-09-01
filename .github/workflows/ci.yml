@@ -130,12 +130,12 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ghcr.io/${{ github.repository }}
-          # Add git branch, tag and short SHA as Docker tag
+          # Branch/SHA for commits, semver for Git tags
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-            type=sha
+            type=sha,enable=${{ github.ref_type != 'tag' }}
           # Disable latest tag convention on push tag event
           flavor: |
             latest=false

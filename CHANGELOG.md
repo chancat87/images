@@ -3,7 +3,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Current trunk] - started 2019-09-01
+## [Current trunk] - started 2026-09-01
+
+## [5.1.0] - started 2019-09-01
 
 Requires libvips 8.13+.
 
@@ -243,7 +245,8 @@ The start of our image proxy. See for more details [here](https://github.com/wes
 We never kept a changelog from 2007 to 2015.
 For a quick overview of what we've added, changed or fixed in the past, see our [completed label](https://github.com/weserv/images/issues?utf8=%E2%9C%93&q=label%3Acompleted%20no%3Amilestone) on our issue tracker. Or take a look at our [1.x branch](https://github.com/weserv/images/tree/1.x).
 
-[Current trunk]: https://github.com/weserv/images/compare/v5.0.0...HEAD
+[Current trunk]: https://github.com/weserv/images/compare/v5.1.0...HEAD
+[5.1.0]: https://github.com/weserv/images/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/weserv/images/compare/4.x...v5.0.0
 [4.0.0]: https://github.com/weserv/images/compare/3.x...4.x
 [3.0.0]: https://github.com/weserv/images/compare/78d8b32...3.x
