@@ -30,7 +30,7 @@ if get_option('b_coverage')
     add_project_arguments(cpp.get_supported_arguments('-fprofile-abs-path'), language: 'cpp')
 endif
 
-vips_dep = dependency('vips-cpp', version: '>=8.12.0')
+vips_dep = dependency('vips-cpp', version: '>=8.13')
 
 summary('Compiler', cpp.get_id(), section: 'Toolchain')
 summary('Linker', cpp.get_linker_id(), section: 'Toolchain')
