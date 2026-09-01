@@ -60,11 +60,11 @@ std::pair<int, int> Stream::get_page_load_options(int n_pages) const {
     auto page = query_->get_if<int>(
         "page",
         [&n_pages](int p) {
-            // Limit page to [0, n_pages]
+            // Limit page to [0, n_pages)
             // Or:
             //  -1 = largest page
             //  -2 = smallest page
-            return p == -1 || p == -2 || (p >= 0 && p <= n_pages);
+            return p == -1 || p == -2 || (p >= 0 && p < n_pages);
         },
         0);
 

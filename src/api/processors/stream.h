@@ -32,7 +32,7 @@ class Stream {
     const Config &config_;
 
     /**
-     * Finds the largest/smallest page in the range [0, n_pages].
+     * Finds the largest/smallest page in the range [0, n_pages).
      * Pages are compared using the given comparison function.
      * Assumes the target page is among the first 30 pages.
      * See: https://github.com/weserv/images/issues/170.
@@ -42,7 +42,7 @@ class Stream {
      * @param source Source to read from.
      * @param loader Image loader.
      * @param comp Comparison function object.
-     * @return The largest/smallest page in the range [0, n_pages].
+     * @return The largest/smallest page in the range [0, n_pages).
      */
     template <typename Comparator>
     int resolve_page(const VImage &image, int n_pages, const io::Source &source,
